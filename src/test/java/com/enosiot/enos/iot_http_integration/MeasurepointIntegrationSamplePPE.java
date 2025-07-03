@@ -1,6 +1,5 @@
 package com.enosiot.enos.iot_http_integration;
 
-import com.enosiot.enos.iot_http_integration.HttpConnection;
 import com.enosiot.enos.iot_http_integration.message.IntegrationMeasurepointPostRequest;
 import com.enosiot.enos.iot_http_integration.message.IntegrationResponse;
 import com.enosiot.enos.iot_mqtt_sdk.core.exception.EnosException;
@@ -9,10 +8,10 @@ import com.google.common.collect.Maps;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Random;
 
 /**
  * @author :charlescai
@@ -39,7 +38,7 @@ public class MeasurepointIntegrationSamplePPE {
 
         // Measurepoints are defined in ThingModel
         HashMap<String, Object> hashMap = Maps.newHashMap();
-        hashMap.put("Meter.Ua", new Random().nextDouble());
+        hashMap.put("Meter.Ua", new SecureRandom().nextDouble());
 //        File file = new File("sample1.txt");
 //        try {
 //            file.createNewFile();
@@ -67,17 +66,15 @@ public class MeasurepointIntegrationSamplePPE {
         while (true) {
             IntegrationMeasurepointPostRequest request = buildMeasurepointPostRequest();
 
-            try
-            {
+            try {
                 IntegrationResponse response = connection.publish(request, null);
                 Date date = new Date();// 获取当前时间
                 System.out.println("现在时间：" + sdf.format(date)); // 输出已经格式化的现在时间（24小时制）
                 System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(response));
-            } catch (EnosException | IOException e)
-            {
+            } catch (EnosException | IOException e) {
                 e.printStackTrace();
             }
-            Thread.sleep(60000*3);
+            Thread.sleep(60000 * 3);
         }
     }
 }
